@@ -4,6 +4,7 @@ import (
 	"GoStudy/games/myipc"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"sync"
 )
 
@@ -15,10 +16,10 @@ type Message struct {
 }
 
 type CenterServer struct {
-	servers map[string]myipc.Server
+	servers map[string]*myipc.Server
 	players []*Player
-	rooms   []*Room
-	mutex   sync.RWMutex
+	//rooms   []*Room
+	mutex sync.RWMutex
 }
 
 func NewCenterServer() *CenterServer {
@@ -103,13 +104,14 @@ func (server *CenterServer) Handle(method, params string) *myipc.Response {
 			return &myipc.Response{Code: err.Error()}
 		}
 	case "listplayer":
-		err := server.listplayer(params)
+		players, err := server.listplayer(params)
 		if err != nil {
 			return &myipc.Response{Code: err.Error()}
 		}
+		fmt.Println(players)
 	case "broadcast":
 		if err := server.brodcast(params); err != nil {
-			return &myipc.Respoense{Code: err.Error()}
+			return &myipc.Response{Code: err.Error()}
 		}
 	default:
 		return &myipc.Response{Code: "404", Body: method + ":" + params}

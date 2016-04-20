@@ -11,7 +11,7 @@ type CenterClient struct {
 }
 
 func (client *CenterClient) AddPlayer(player *Player) (err error) {
-	b, err := json.Marshal(*Player)
+	b, err := json.Marshal(*player)
 	if err != nil {
 		return
 	}

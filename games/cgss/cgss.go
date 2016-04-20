@@ -61,8 +61,8 @@ func Login(args []string) int {
 	}
 	player := centergame.NewPlayer()
 	player.Name = args[1]
-	player.level = level
-	player.exp = exp
+	player.Level = level
+	player.Exp = exp
 	err = centerClient.AddPlayer(player)
 	if err != nil {
 		fmt.Println("Failed adding player ", err)
@@ -83,7 +83,7 @@ func ListPlayer(args []string) int {
 
 func Send(args []string) int {
 	message := strings.Join(args[1:], "  ")
-	err := centerClient.Broacast(message)
+	err := centerClient.Broadcast(message)
 	if err != nil {
 		fmt.Println("Failed. ", err)
 	}
@@ -92,14 +92,14 @@ func Send(args []string) int {
 
 func GetCommandHandlers() map[string]func(args []string) int {
 	return map[string]func([]string) int{
-		"help":   Help,
-		"h":      h,
-		"quit":   Quit,
-		"q":      Quit,
-		"login":  Login,
-		"logout": Logout,
-		"listplayer", ListPlayer,
-		"send", Send,
+		"help":       Help,
+		"h":          Help,
+		"quit":       Quit,
+		"q":          Quit,
+		"login":      Login,
+		"logout":     Logout,
+		"listplayer": ListPlayer,
+		"send":       Send,
 	}
 }
 
@@ -114,7 +114,7 @@ func main() {
 		b, _, _ := r.ReadLine()
 		line := string(b)
 		tokens := strings.Split(line, "  ")
-		if handler, ok := handlers[tokens[0]]; ok {
+		if handler, ok := handlers[string(tokens[0])]; ok {
 			ret := handler(tokens)
 			if ret != 0 {
 				break
